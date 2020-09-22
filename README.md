@@ -63,4 +63,4 @@ Mining 4 done, cha-ching!
 	In what way isn't it faster?
 - **TODO 2:**
 	We want this all be *very* fast, so we want to avoid the copies of the pipe-based, message-passing implementation.
-	Please us the shared memory (already set up in `shmem` for each child) to pass the data back to the parent and cash in.
+	Please use the shared memory (already set up in `shmem` for each child) to pass the data back to the parent and cash in.
