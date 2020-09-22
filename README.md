@@ -1,11 +1,14 @@
-# Fork, Communication and Bytecoin Mining
+# Fork, Communication and Pennycoin Mining
 
-We wrote a program to use many processes to mine bytecoin for us!
+Heard of bitcoin?
+Dogecoin?
+You haven't seen anything until you've seen the new **PENNYCOINS**!!!
+We wrote a program to use many processes to mine pennycoin for us!
 We'll be rich!
 
 Problem is, we have a performance issue.
 We're running the mining in many different processes, and they all finish at different times, but they take forever to get back to us.
-We want to get the bytecoins back *as they are mined*, and don't want to wait for the *next* one to cache in.
+We want to get the pennycoins back *as they are mined*, and don't want to wait for the *next* one to cache in.
 Currently, it does this:
 
 ```

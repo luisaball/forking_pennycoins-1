@@ -8,10 +8,11 @@
 #include <time.h>
 #include <sys/mman.h>
 #include <assert.h>
+#include <string.h>
 
-#define NCHILD    16
-#define BYTEMSGSZ 32
-#define RAND_SPAN (RAND_MAX/4)
+#define NCHILD       16
+#define PENNY_MSG_SZ 32
+#define RAND_SPAN    (RAND_MAX/4)
 
 struct child_data {
 	int   child_off;
@@ -47,7 +48,7 @@ create_shmem(struct child_data *d)
 {
 	assert(shmem != NULL);
 
-	d->shmem = shmem + (d->child_off * BYTEMSGSZ);
+	d->shmem = shmem + (d->child_off * PENNY_MSG_SZ);
 }
 
 void
@@ -67,8 +68,8 @@ ipc_init(void)
 }
 
 /*
- * I hear bitcoin is amazing. And that bytes are greater than
- * bits. Lets do bytecoin mining!
+ * I hear bitcoin is amazing. But who wouldn't want a pennycoin? Lets
+ * do some pennycoin mining!
  *
  * TODO 1: update this to send over the non-blocking channel (the
  * write is still blocking!!!!).
@@ -77,21 +78,21 @@ ipc_init(void)
  * pipe!
  */
 void
-bytecoin_mining(struct child_data *us, char byte)
+pennycoin_mining(struct child_data *us, char byte)
 {
-	char return_message[BYTEMSGSZ];
+	char return_message[PENNY_MSG_SZ];
 	unsigned int i;
 	(void)us;
 
 	/* emulate trying to find a specific byte! */
 	while (rand() % RAND_SPAN != byte) ;
 
-	for (i = 0; i < BYTEMSGSZ; i++) {
+	for (i = 0; i < PENNY_MSG_SZ; i++) {
 		return_message[i] = byte;
 	}
 
 	/* Add code here to send the return message back to the parent! */
-	write(us->pipe[1], return_message, BYTEMSGSZ);
+	write(us->pipe[1], return_message, PENNY_MSG_SZ);
 
 	return;
 }
@@ -113,7 +114,7 @@ main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		case 0: {	/* child */
-			bytecoin_mining(&children[i], i+1);
+			pennycoin_mining(&children[i], i+1);
 			exit(EXIT_SUCCESS);
 		}}
 	}
@@ -124,21 +125,21 @@ main(int argc, char *argv[])
 	 *
 	 * TODO 1: update this to receive over the non-blocking
 	 * channel, the `read` should be non-blocking so that we can
-	 * check for the *next* available bytecoin.
+	 * check for the *next* available pennycoin.
 	 *
 	 * TODO 2: receive the message from a child in shared memory
 	 * instead of over a pipe!
 	 */
 	while (msgs_received < NCHILD) {
 		for (i = 0; i < NCHILD; i++) {
-			char msg[BYTEMSGSZ];
+			char msg[PENNY_MSG_SZ];
 			int ret;
 
 			/* Skip over the children for which we've already received a message */
 			if (!children[i].pending) continue;
 
 			/* read from the child. */
-			ret = read(children[i].pipe[0], msg, BYTEMSGSZ);
+			ret = read(children[i].pipe[0], msg, PENNY_MSG_SZ);
 			if (ret < 0) {
 				if (errno == EAGAIN) {
 					/* non-blocking logic here! */
@@ -150,7 +151,7 @@ main(int argc, char *argv[])
 			}
 
 			/* We got a message! */
-			assert(ret == BYTEMSGSZ);
+			assert(ret == PENNY_MSG_SZ);
 			assert(msg[0] == i+1);
 			children[i].pending = 0;
 			msgs_received++;
