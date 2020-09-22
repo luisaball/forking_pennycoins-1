@@ -50,7 +50,7 @@ Mining 4 done, cha-ching!
 ```
 
 - **Question 1:**
-	Why does non-blocking approach give you *bursty* responses?
+	Why does blocking approach give you *bursty* responses?
 	I.e. a bunch cache in at the same time.
 - **Question 2:**
 	What impact will allowing the children to cache out in any order have?
