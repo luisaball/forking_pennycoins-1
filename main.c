@@ -142,7 +142,7 @@ main(int argc, char *argv[])
 			ret = read(children[i].pipe[0], msg, PENNY_MSG_SZ);
 			if (ret < 0) {
 				if (errno == EAGAIN) {
-					/* non-blocking logic here! */
+					/* non-blocking logic is here! */
 					continue; /* Just keep on going through all the children */
 				} else {
 					perror("Parent reading from child");
