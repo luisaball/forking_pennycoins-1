@@ -92,7 +92,7 @@ pennycoin_mining(struct child_data *us, char byte)
 	}
 
 	/* Add code here to send the return message back to the parent! */
-	write(us->pipe[1], return_message, PENNY_MSG_SZ);
+	write(us->nbpipe[1], return_message, PENNY_MSG_SZ);
 
 	return;
 }
@@ -139,7 +139,7 @@ main(int argc, char *argv[])
 			if (!children[i].pending) continue;
 
 			/* read from the child. */
-			ret = read(children[i].pipe[0], msg, PENNY_MSG_SZ);
+			ret = read(children[i].nbpipe[0], msg, PENNY_MSG_SZ);
 			if (ret < 0) {
 				if (errno == EAGAIN) {
 					/* non-blocking logic is here! */
