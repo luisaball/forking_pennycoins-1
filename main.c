@@ -92,7 +92,8 @@ pennycoin_mining(struct child_data *us, char byte)
 	}
 
 	/* Add code here to send the return message back to the parent! */
-	write(us->pipe[1], return_message, PENNY_MSG_SZ);
+	memcpy(us->shmem, return_message, PENNY_MSG_SZ);
+// 	write(us->nbpipe[0], return_message, PENNY_MSG_SZ);
 
 	return;
 }
@@ -133,22 +134,27 @@ main(int argc, char *argv[])
 	while (msgs_received < NCHILD) {
 		for (i = 0; i < NCHILD; i++) {
 			char msg[PENNY_MSG_SZ];
-			int ret;
+			int *ret;
 
 			/* Skip over the children for which we've already received a message */
 			if (!children[i].pending) continue;
 
 			/* read from the child. */
-			ret = read(children[i].pipe[0], msg, PENNY_MSG_SZ);
-			if (ret < 0) {
-				if (errno == EAGAIN) {
-					/* non-blocking logic is here! */
-					continue; /* Just keep on going through all the children */
-				} else {
-					perror("Parent reading from child");
-					exit(EXIT_FAILURE);
-				}
-			}
+			//ret = read(children[i].nbpipe[0], msg, PENNY_MSG_SZ);
+			memcopy(msg, children[i].shmem, PENNY_MSG_SZ);
+			
+			//change to error checking shared memory
+			if (children[i].shmem == 0 || msg[0]==0); continue;
+			
+// 			{
+// 				if (errno == EAGAIN) {
+// 					/* non-blocking logic is here! */
+// 					continue; /* Just keep on going through all the children */
+// 				} else {
+// 					perror("No message");
+// 					exit(EXIT_FAILURE);
+// 				}
+// 			}
 
 			/* We got a message! */
 			assert(ret == PENNY_MSG_SZ);
